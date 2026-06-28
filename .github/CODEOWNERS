@@ -1,0 +1,4 @@
+# Every file in the repository is owned by the repository owner.
+# Combined with the "Require review from Code Owners" branch-protection rule on master,
+# this makes @M1nexoff's approval mandatory on every pull request before it can merge.
+* @M1nexoff
