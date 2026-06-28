@@ -7,7 +7,7 @@
 This Commercial License Agreement (the "Agreement") is made as of [DATE] (the "Effective
 Date") between:
 
-- **Licensor:** Iskandarxojayev Azamxoja, [address], devasgardia@gmail.com ("Licensor"); and
+- **Licensor:** A'zamxo'ja Iskandarxo'jayev, [address], devasgardia@gmail.com ("Licensor"); and
 - **Licensee:** [Company legal name], [address] ("Licensee").
 
 ## 1. Definitions
@@ -48,8 +48,8 @@ subscription term]. Licensor may terminate it if Licensee materially breaches an
 to cure within [30] days of notice. Sections 5, 6, and 8 survive termination.
 
 ## 8. Governing Law
-This Agreement is governed by the laws of [jurisdiction]; disputes shall be resolved in
-the courts of [venue].
+This Agreement is governed by the laws of the Republic of Uzbekistan; disputes shall be
+resolved in the competent courts of [city — e.g. Tashkent].
 
 ## 9. Entire Agreement
 This Agreement and its Exhibits are the entire agreement between the parties and

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Iskandarxojayev Azamxoja <devasgardia@gmail.com>
+// SPDX-FileCopyrightText: 2026 A'zamxo'ja Iskandarxo'jayev <devasgardia@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
 package uz.m1nex.nolaglauncher.ui.screens.launcher
@@ -34,7 +34,7 @@ data class DraggedItem(val app: HomeApp, val fromFavourite: Boolean)
  * state so the floating ghost recomposes/redraws as the finger moves, while [dockBounds] is a plain
  * field read only at drop time (it never needs to trigger recomposition).
  *
- * @author Iskandarxojayev Azamxoja
+ * @author A'zamxo'ja Iskandarxo'jayev
  */
 @Stable
 class LauncherDragState {
@@ -61,7 +61,7 @@ fun hoveredCellIn(point: Offset, bounds: Rect, grid: GridConfig): Int? {
  * Insertion index for the dock given the pointer x. With [displayCount] icons currently shown there
  * are [displayCount] + 1 landing positions, so the dock width is divided into that many slots.
  *
- * @author Iskandarxojayev Azamxoja
+ * @author A'zamxo'ja Iskandarxo'jayev
  */
 fun dockInsertIndex(x: Float, dock: Rect, displayCount: Int): Int {
     if (displayCount <= 0) return 0
@@ -77,7 +77,7 @@ fun rememberLauncherDragState(): LauncherDragState = remember { LauncherDragStat
  * to this cell, so it is added to the cell's own root offset ([positionInRoot]) to produce a
  * window-absolute coordinate that the ghost overlay and the dock hit-test can both reason about.
  *
- * @author Iskandarxojayev Azamxoja
+ * @author A'zamxo'ja Iskandarxo'jayev
  */
 fun Modifier.draggableAppCell(
     app: HomeApp,

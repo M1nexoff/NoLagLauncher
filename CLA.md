@@ -1,7 +1,7 @@
 # Contributor License Agreement (CLA)
 
 **Project:** NoLag Launcher (the "Project") — https://github.com/M1nexoff/nlluncher
-**Owner:** Iskandarxojayev Azamxoja, GitHub [@M1nexoff](https://github.com/M1nexoff) (the "Owner")
+**Owner:** A'zamxo'ja Iskandarxo'jayev, GitHub [@M1nexoff](https://github.com/M1nexoff) (the "Owner")
 **Contact:** devasgardia@gmail.com
 
 Thank you for contributing to NoLag Launcher. This Contributor License Agreement
@@ -23,21 +23,24 @@ submit Contributions.**
   existing work — that You intentionally submit to the Owner or the Project (for
   example via pull request, patch, commit, or other communication) for inclusion in
   or use by the Project.
-- **"Owner"** means Iskandarxojayev Azamxoja, sole owner and maintainer of the
+- **"Owner"** means A'zamxo'ja Iskandarxo'jayev, sole owner and maintainer of the
   Project, together with the Owner's heirs, successors, and assigns.
 - **"Submit"** means any form of electronic, verbal, or written communication sent to
   the Owner or the Project (including a contribution to its repositories, issues, or
   communication channels), excluding communication conspicuously marked in writing as
   "Not a Contribution."
 
-## 2. Assignment of Copyright
+## 2. Transfer of Exclusive (Economic) Rights
 
-To the fullest extent permitted by applicable law, You irrevocably assign and
-transfer to the Owner, worldwide and in perpetuity, all right, title, and interest in
-and to the copyright and all related economic/exploitation rights in Your
-Contributions, including the exclusive rights to reproduce, modify, adapt, distribute,
-publicly perform and display, sublicense, and create derivative works. **The Owner is
-and shall be the sole owner of the Contributions.**
+This Agreement operates as an author's contract on the transfer of **exclusive rights**
+within the meaning of the Law of the Republic of Uzbekistan "On Copyright and Related
+Rights" (No. LRU-42, 20 July 2006, as amended). To the fullest extent permitted by
+applicable law, You irrevocably transfer and assign to the Owner, worldwide and for the
+entire term of protection, all economic/property rights in Your Contributions —
+including the exclusive rights to use, reproduce, modify, adapt, translate, distribute,
+publicly perform and display, import, sublicense, and create derivative works. **As
+between You and the Owner, the Owner is the sole holder of the economic rights in, and
+the sole owner of, the Contributions.**
 
 ## 3. Fallback License
 
@@ -59,11 +62,13 @@ alone or in combination with the Project.
 
 ## 5. Moral Rights
 
-To the fullest extent permitted by applicable law, You waive, and agree not to assert,
-any moral rights (including rights of attribution and integrity) in the Contributions
-against the Owner or the Owner's licensees, successors, and assigns. Where such rights
-cannot be waived, You agree not to enforce them in a way that restricts the Owner's
-exercise of the rights granted by this Agreement.
+Under the law of the Republic of Uzbekistan, an author's personal non-property (moral)
+rights — in particular the right to be recognized as the author — are **inalienable and
+remain with You**; this Agreement does not transfer them. You retain the right to be
+acknowledged as the author of Your own Contributions. To the fullest extent permitted by
+law, You agree not to exercise Your moral rights in a way that obstructs the Owner's use,
+modification, distribution, relicensing, or commercialization of the Contributions or the
+Project.
 
 ## 6. Right to Relicense and Commercialize
 
@@ -107,8 +112,9 @@ trademarks, logos, or branding.
 
 ## 11. Governing Law
 
-This Agreement is governed by the laws of **[the Republic of Uzbekistan — confirm Your
-jurisdiction]**, without regard to its conflict-of-law rules.
+This Agreement is governed by the laws of the **Republic of Uzbekistan**, in particular
+the Law "On Copyright and Related Rights" (No. LRU-42, 20 July 2006, as amended) and the
+Civil Code, without regard to conflict-of-law rules.
 
 ## 12. Entire Agreement
 
@@ -127,8 +133,8 @@ will ask you, on your first pull request, to post the comment below — post it 
 
 ---
 
-> **This document is a template, not legal advice.** CLAs — and especially copyright
-> assignment (Section 2) and moral-rights waivers (Section 5) — are enforced
-> differently across jurisdictions. Before relying on this, have a qualified lawyer
-> review and adapt it (in particular Sections 2, 3, 5, and 11) and confirm the Owner's
-> full legal name and jurisdiction.
+> **This document is a template, not legal advice.** It is drafted for the law of the
+> Republic of Uzbekistan, under which an author's economic rights may be transferred by
+> an author's contract (Section 2) while moral rights are inalienable and stay with the
+> author (Section 5). Before relying on this, have a qualified Uzbek IP lawyer review and
+> adapt it (in particular Sections 2, 3, and 5).

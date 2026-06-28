@@ -2,7 +2,7 @@
 
 A highly optimized, minimalistic Android home launcher.
 
-Copyright (C) 2026 Iskandarxojayev Azamxoja ([@M1nexoff](https://github.com/M1nexoff)).
+Copyright (C) 2026 A'zamxo'ja Iskandarxo'jayev ([@M1nexoff](https://github.com/M1nexoff)).
 
 ## License
 

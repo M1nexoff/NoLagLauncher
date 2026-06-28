@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Iskandarxojayev Azamxoja <devasgardia@gmail.com>
+// SPDX-FileCopyrightText: 2026 A'zamxo'ja Iskandarxo'jayev <devasgardia@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
 package uz.m1nex.nolaglauncher.utils
@@ -11,7 +11,7 @@ import androidx.core.net.toUri
 
 /**
  * @param action use [Settings] actions like [Settings.ACTION_HOME_SETTINGS]
- * @author Iskandarxojayev Azamxoja
+ * @author A'zamxo'ja Iskandarxo'jayev
  *
  * */
 fun Context.openSettings(action: String){
