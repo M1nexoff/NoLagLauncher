@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -205,35 +207,32 @@ private fun AppPage(
     ) {
         val cellWidth = maxWidth / grid.columns
         val cellHeight = maxHeight / grid.rows
+        val totalCells = grid.rows * grid.columns
 
         HoverHighlight(hoveredCell = hoveredCell, grid = grid, cellWidth = cellWidth, cellHeight = cellHeight)
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            for (row in 0 until grid.rows) {
-                Row(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(grid.columns),
+            modifier = Modifier.fillMaxSize(),
+            userScrollEnabled = false
+        ) {
+            items(totalCells, key = { index -> byPosition[index]?.componentKey ?: "empty_$index" }) { index ->
+                Box(
                     modifier = Modifier
+                        .aspectRatio(cellWidth / cellHeight)
                         .fillMaxWidth()
-                        .weight(1f)
+                        .animateItem(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    for (column in 0 until grid.columns) {
-                        val index = row * grid.columns + column
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            byPosition[index]?.let { app ->
-                                AppCell(
-                                    app = app,
-                                    fromFavourite = false,
-                                    loadIcon = loadIcon,
-                                    onLaunch = onLaunch,
-                                    dragState = dragState,
-                                    onDrop = onDrop
-                                )
-                            }
-                        }
+                    byPosition[index]?.let { app ->
+                        AppCell(
+                            app = app,
+                            fromFavourite = false,
+                            loadIcon = loadIcon,
+                            onLaunch = onLaunch,
+                            dragState = dragState,
+                            onDrop = onDrop
+                        )
                     }
                 }
             }
