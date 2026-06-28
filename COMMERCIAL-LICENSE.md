@@ -1,8 +1,6 @@
-# NoLag Launcher — Commercial License Agreement (TEMPLATE)
+# NoLag Launcher — Commercial License Agreement
 
-> **Template only — not legal advice.** This is a starting point for a paid, proprietary
-> license the Owner may grant to a customer as an alternative to the AGPL-3.0. Have a
-> qualified lawyer adapt it before use, and fill in every [bracketed] field.
+> Complete every [bracketed] field for each licensee before signing.
 
 This Commercial License Agreement (the "Agreement") is made as of [DATE] (the "Effective
 Date") between:
