@@ -5,7 +5,7 @@
 This Commercial License Agreement (the "Agreement") is made as of [DATE] (the "Effective
 Date") between:
 
-- **Licensor:** A'zamxo'ja Iskandarxo'jayev, [address], devasgardia@gmail.com ("Licensor"); and
+- **Licensor:** A'zamxo'ja Iskandarxo'jayev, [address], aiskandarxojayev@gmail.com ("Licensor"); and
 - **Licensee:** [Company legal name], [address] ("Licensee").
 
 ## 1. Definitions
