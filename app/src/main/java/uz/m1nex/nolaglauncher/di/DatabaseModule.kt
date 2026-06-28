@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import uz.m1nex.nolaglauncher.data.local.LauncherDatabase
 import uz.m1nex.nolaglauncher.data.local.dao.AppDao
 import uz.m1nex.nolaglauncher.data.local.dao.IconDao
+import uz.m1nex.nolaglauncher.data.local.dao.SettingsDao
 import javax.inject.Singleton
 
 @Module
@@ -28,4 +29,7 @@ object DatabaseModule {
 
     @Provides
     fun provideIconDao(database: LauncherDatabase): IconDao = database.iconDao()
+
+    @Provides
+    fun provideSettingsDao(database: LauncherDatabase): SettingsDao = database.settingsDao()
 }

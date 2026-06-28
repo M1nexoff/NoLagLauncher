@@ -22,28 +22,41 @@ android {
         resourceConfigurations.addAll(listOf("en", "xxhdpi"))
     }
 
-    buildTypes {
-        create("fastRelease") {
-            initWith(getByName("release"))
+    val fastKeystore = file("signing/fast.jks")
 
+    signingConfigs {
+        if (fastKeystore.exists()) {
+            create("fastrun") {
+                keyAlias = "key0"
+                storeFile = fastKeystore
+                keyPassword = "fastrun"
+                storePassword = "fastrun"
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            if (fastKeystore.exists()) {
+                signingConfig = signingConfigs.getByName("fastrun")
+            }
+        }
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
-
-            isDebuggable = false
-
-            signingConfig = signingConfigs.getByName("debug")
-
-            applicationIdSuffix = ".fast"
+            // Production keystore (separate .jks) is configured on this build type later.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
-        release {
+        create("fastRelease") {
+            initWith(getByName("release"))
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+            isShrinkResources = false
+            isDebuggable = false
+            signingConfig = signingConfigs.getByName(
+                if (fastKeystore.exists()) "fastrun" else "debug"
             )
         }
     }

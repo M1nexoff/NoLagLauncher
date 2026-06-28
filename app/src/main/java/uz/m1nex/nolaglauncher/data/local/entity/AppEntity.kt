@@ -11,5 +11,7 @@ data class AppEntity(
     val label: String,
     val lastUpdateTime: Long,
     val page: Int,
-    val position: Int
+    val position: Int,
+    val favourite: Boolean = false,
+    val favouritePosition: Int = -1
 )
