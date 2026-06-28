@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Iskandarxojayev Azamxoja <devasgardia@gmail.com>
+// SPDX-FileCopyrightText: 2026 A'zamxo'ja Iskandarxo'jayev <devasgardia@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
 package uz.m1nex.nolaglauncher.data.repository
@@ -68,7 +68,7 @@ class AppsRepositoryImpl @Inject constructor(
      * existing apps keep their exact (page, position) so deliberate gaps survive, brand-new apps are
      * appended after the last occupied slot, and uninstalled apps are deleted (leaving a gap).
      *
-     * @author Iskandarxojayev Azamxoja
+     * @author A'zamxo'ja Iskandarxo'jayev
      */
     override suspend fun syncApps() = syncMutex.withLock {
         withContext(Dispatchers.Default) {
@@ -152,7 +152,7 @@ class AppsRepositoryImpl @Inject constructor(
      * holds a home app they swap; if the moving app came from the dock and the target is occupied it
      * is dropped onto the first free slot instead so the occupant is never lost.
      *
-     * @author Iskandarxojayev Azamxoja
+     * @author A'zamxo'ja Iskandarxo'jayev
      */
     override suspend fun moveAppToCell(componentKey: String, page: Int, position: Int) {
         val perPage = settingsRepository.getGrid().perPage
@@ -187,7 +187,7 @@ class AppsRepositoryImpl @Inject constructor(
      * favourite is the same operation (it is removed from its old index first). The app's former home
      * cell is intentionally left empty.
      *
-     * @author Iskandarxojayev Azamxoja
+     * @author A'zamxo'ja Iskandarxo'jayev
      */
     override suspend fun addToFavouriteAt(componentKey: String, index: Int): Boolean =
         database.withTransaction {

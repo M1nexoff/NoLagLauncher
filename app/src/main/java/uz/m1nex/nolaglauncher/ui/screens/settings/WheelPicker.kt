@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Iskandarxojayev Azamxoja <devasgardia@gmail.com>
+// SPDX-FileCopyrightText: 2026 A'zamxo'ja Iskandarxo'jayev <devasgardia@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
 package uz.m1nex.nolaglauncher.ui.screens.settings
@@ -37,7 +37,7 @@ private const val VisibleItems = 5
  * [androidx.compose.foundation.lazy.LazyListState.firstVisibleItemIndex], rounded up when the list
  * has scrolled past the half-way point of an item.
  *
- * @author Iskandarxojayev Azamxoja
+ * @author A'zamxo'ja Iskandarxo'jayev
  */
 @Composable
 fun WheelPicker(

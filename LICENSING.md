@@ -25,7 +25,7 @@ copyright holder. Terms (scope, fees, support) are agreed individually.
 
 **Contact for commercial licensing:**
 
-- **Iskandarxojayev Azamxoja** — devasgardia@gmail.com
+- **A'zamxo'ja Iskandarxo'jayev** — devasgardia@gmail.com
 - GitHub: https://github.com/M1nexoff
 
 Because the Owner is the **sole** copyright holder — every contribution is assigned to
