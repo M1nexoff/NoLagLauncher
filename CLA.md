@@ -1,6 +1,6 @@
 # Contributor License Agreement (CLA)
 
-**Project:** NoLag Launcher (the "Project") — https://github.com/M1nexoff/nlluncher
+**Project:** NoLag Launcher (the "Project") — https://github.com/M1nexoff/NoLagLauncher
 **Owner:** A'zamxo'ja Iskandarxo'jayev, GitHub [@M1nexoff](https://github.com/M1nexoff) (the "Owner")
 **Contact:** aiskandarxojayev@gmail.com
 

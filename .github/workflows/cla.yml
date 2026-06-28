@@ -22,9 +22,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-document: 'https://github.com/M1nexoff/nlluncher/blob/master/CLA.md'
+          path-to-document: 'https://github.com/M1nexoff/NoLagLauncher/blob/master/CLA.md'
           branch: 'master'
           allowlist: M1nexoff,bot*,dependabot[bot]
-          custom-notsigned-prcomment: 'Thank you for your contribution. Before it can be merged, you must agree to the project''s [Contributor License Agreement](https://github.com/M1nexoff/nlluncher/blob/master/CLA.md). Please read it, then sign by posting the exact comment below in this pull request.'
+          custom-notsigned-prcomment: 'Thank you for your contribution. Before it can be merged, you must agree to the project''s [Contributor License Agreement](https://github.com/M1nexoff/NoLagLauncher/blob/master/CLA.md). Please read it, then sign by posting the exact comment below in this pull request.'
           custom-pr-sign-comment: 'I have read the CLA Document and I hereby sign the CLA'
           custom-allsigned-prcomment: 'All contributors have signed the CLA. ✍️'
