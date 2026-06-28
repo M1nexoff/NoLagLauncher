@@ -12,7 +12,7 @@ NoLag Launcher is **dual-licensed** (see [LICENSING.md](LICENSING.md)):
   attribution notices **and** open-source your entire derivative project (including for
   network/online services).
 - **Commercial license:** to use NoLag Launcher in a closed-source product without the
-  AGPL obligations, buy a commercial license — contact **devasgardia@gmail.com**.
+  AGPL obligations, buy a commercial license — contact **aiskandarxojayev@gmail.com**.
 
 ## Contributing
 
