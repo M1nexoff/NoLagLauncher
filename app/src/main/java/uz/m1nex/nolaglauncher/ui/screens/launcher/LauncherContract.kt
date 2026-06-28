@@ -16,7 +16,8 @@ class LauncherContract {
 
     sealed interface Intent {
         data class LaunchApp(val componentName: ComponentName) : Intent
-        data class AddToFavourite(val componentKey: String) : Intent
+        data class MoveAppToCell(val componentKey: String, val page: Int, val position: Int) : Intent
+        data class AddToFavouriteAt(val componentKey: String, val index: Int) : Intent
         data class RemoveFromFavourite(val componentKey: String) : Intent
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import uz.m1nex.nolaglauncher.domain.model.GridConfig
 import uz.m1nex.nolaglauncher.domain.model.HomeApp
 
 data class DraggedItem(val app: HomeApp, val fromFavourite: Boolean)
@@ -37,6 +38,32 @@ class LauncherDragState {
     var dragged by mutableStateOf<DraggedItem?>(null)
     var position by mutableStateOf(Offset.Zero)
     var dockBounds: Rect? = null
+
+    /** Window-absolute bounds of each app page's grid content, keyed by data-page index. */
+    val pageBounds = HashMap<Int, Rect>()
+}
+
+fun cellIndexIn(point: Offset, bounds: Rect, grid: GridConfig): Int {
+    val column = ((point.x - bounds.left) / (bounds.width / grid.columns)).toInt().coerceIn(0, grid.columns - 1)
+    val row = ((point.y - bounds.top) / (bounds.height / grid.rows)).toInt().coerceIn(0, grid.rows - 1)
+    return row * grid.columns + column
+}
+
+fun hoveredCellIn(point: Offset, bounds: Rect, grid: GridConfig): Int? {
+    if (!bounds.contains(point)) return null
+    return cellIndexIn(point, bounds, grid)
+}
+
+/**
+ * Insertion index for the dock given the pointer x. With [displayCount] icons currently shown there
+ * are [displayCount] + 1 landing positions, so the dock width is divided into that many slots.
+ *
+ * @author Iskandarxojayev Azamxoja
+ */
+fun dockInsertIndex(x: Float, dock: Rect, displayCount: Int): Int {
+    if (displayCount <= 0) return 0
+    val slot = dock.width / (displayCount + 1)
+    return ((x - dock.left) / slot).toInt().coerceIn(0, displayCount)
 }
 
 @Composable
@@ -95,7 +122,7 @@ fun DragGhost(
             modifier = Modifier
                 .graphicsLayer {
                     translationX = dragState.position.x - half
-                    translationY = dragState.position.y - half
+                    translationY = dragState.position.y - (half * 2)
                     alpha = 0.9f
                 }
                 .size(iconSize)
