@@ -47,7 +47,7 @@ to cure within [30] days of notice. Sections 5, 6, and 8 survive termination.
 
 ## 8. Governing Law
 This Agreement is governed by the laws of the Republic of Uzbekistan; disputes shall be
-resolved in the competent courts of [city — e.g. Tashkent].
+resolved in the competent courts of Tashkent.
 
 ## 9. Entire Agreement
 This Agreement and its Exhibits are the entire agreement between the parties and
