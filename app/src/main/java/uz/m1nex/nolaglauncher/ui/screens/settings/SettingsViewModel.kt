@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Iskandarxojayev Azamxoja <devasgardia@gmail.com>
+// SPDX-License-Identifier: AGPL-3.0-only
+
 package uz.m1nex.nolaglauncher.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
