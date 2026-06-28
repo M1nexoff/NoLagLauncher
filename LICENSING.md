@@ -32,8 +32,3 @@ Because the Owner is the **sole** copyright holder — every contribution is ass
 the Owner under the [Contributor License Agreement](CLA.md) — the Owner is free to grant
 the Project under commercial terms in addition to the AGPL. A starting-point template is
 in [COMMERCIAL-LICENSE.md](COMMERCIAL-LICENSE.md).
-
----
-
-> This document explains the model; it is not legal advice. Have a lawyer review any
-> commercial agreement before you sign it.

@@ -130,11 +130,3 @@ Agreement for that and all future Contributions. To record your acceptance, the 
 will ask you, on your first pull request, to post the comment below — post it **exactly**:
 
 > I have read the CLA Document and I hereby sign the CLA
-
----
-
-> **This document is a template, not legal advice.** It is drafted for the law of the
-> Republic of Uzbekistan, under which an author's economic rights may be transferred by
-> an author's contract (Section 2) while moral rights are inalienable and stay with the
-> author (Section 5). Before relying on this, have a qualified Uzbek IP lawyer review and
-> adapt it (in particular Sections 2, 3, and 5).
