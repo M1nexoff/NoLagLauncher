@@ -23,9 +23,11 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import uz.m1nex.nolaglauncher.domain.model.GridConfig
 import uz.m1nex.nolaglauncher.domain.model.HomeApp
+import uz.m1nex.nolaglauncher.utils.HapticUtils
 
 data class DraggedItem(val app: HomeApp, val fromFavourite: Boolean)
 
@@ -77,6 +79,8 @@ fun rememberLauncherDragState(): LauncherDragState = remember { LauncherDragStat
  * to this cell, so it is added to the cell's own root offset ([positionInRoot]) to produce a
  * window-absolute coordinate that the ghost overlay and the dock hit-test can both reason about.
  *
+ * Provides haptic feedback during drag interactions for better tactile user experience.
+ *
  * @author A'zamxo'ja Iskandarxo'jayev
  */
 fun Modifier.draggableAppCell(
@@ -85,26 +89,56 @@ fun Modifier.draggableAppCell(
     dragState: LauncherDragState,
     onDrop: (DraggedItem, Offset) -> Unit
 ): Modifier = composed {
+    val view = LocalView.current
     var cellRoot by remember { mutableStateOf(Offset.Zero) }
+    var lastHoverState by remember { mutableStateOf<Any?>(null) }
+
     this
         .onGloballyPositioned { cellRoot = it.positionInRoot() }
-        .pointerInput(app.componentKey, fromFavourite) {
+        .pointerInput(app.componentKey, fromFavourite, view) {
             detectDragGesturesAfterLongPress(
                 onDragStart = { offset ->
                     dragState.dragged = DraggedItem(app, fromFavourite)
                     dragState.position = cellRoot + offset
+                    HapticUtils.performDragStart(view)
+                    lastHoverState = null
                 },
                 onDrag = { change, _ ->
                     change.consume()
                     dragState.position = cellRoot + change.position
+
+                    // Check if hovering over a new drop zone and provide feedback
+                    val currentPosition = dragState.position
+                    val dockBounds = dragState.dockBounds
+                    val currentHoverState = when {
+                        dockBounds != null && dockBounds.contains(currentPosition) -> "dock"
+                        else -> {
+                            dragState.pageBounds.entries.firstOrNull { (_, bounds) ->
+                                bounds.contains(currentPosition)
+                            }?.key
+                        }
+                    }
+
+                    if (currentHoverState != null && currentHoverState != lastHoverState) {
+                        HapticUtils.performHoverFeedback(view)
+                        lastHoverState = currentHoverState
+                    }
                 },
                 onDragEnd = {
                     val item = dragState.dragged
                     val dropPosition = dragState.position
                     dragState.dragged = null
-                    if (item != null) onDrop(item, dropPosition)
+                    if (item != null) {
+                        onDrop(item, dropPosition)
+                        HapticUtils.performDropSuccess(view)
+                    }
+                    lastHoverState = null
                 },
-                onDragCancel = { dragState.dragged = null }
+                onDragCancel = {
+                    dragState.dragged = null
+                    HapticUtils.performDropCancel(view)
+                    lastHoverState = null
+                }
             )
         }
 }
