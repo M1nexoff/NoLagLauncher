@@ -2,7 +2,7 @@
 
 **Project:** NoLag Launcher (the "Project") — https://github.com/M1nexoff/nlluncher
 **Owner:** A'zamxo'ja Iskandarxo'jayev, GitHub [@M1nexoff](https://github.com/M1nexoff) (the "Owner")
-**Contact:** devasgardia@gmail.com
+**Contact:** aiskandarxojayev@gmail.com
 
 Thank you for contributing to NoLag Launcher. This Contributor License Agreement
 (the "Agreement") defines the terms under which intellectual property in Your
