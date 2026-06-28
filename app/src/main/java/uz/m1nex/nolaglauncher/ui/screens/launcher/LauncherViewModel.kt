@@ -38,7 +38,7 @@ class LauncherViewModel @Inject constructor(
                 LauncherContract.State.Loading
             } else {
                 LauncherContract.State.Ready(
-                    pages = apps.groupBy { it.page }.toSortedMap().values.toList(),
+                    pages = buildPages(apps),
                     favourites = favourites,
                     grid = grid
                 )
@@ -59,8 +59,11 @@ class LauncherViewModel @Inject constructor(
     fun onIntent(intent: LauncherContract.Intent) {
         when (intent) {
             is LauncherContract.Intent.LaunchApp -> repository.launchApp(intent.componentName)
-            is LauncherContract.Intent.AddToFavourite -> viewModelScope.launch {
-                repository.addToFavourite(intent.componentKey)
+            is LauncherContract.Intent.MoveAppToCell -> viewModelScope.launch {
+                repository.moveAppToCell(intent.componentKey, intent.page, intent.position)
+            }
+            is LauncherContract.Intent.AddToFavouriteAt -> viewModelScope.launch {
+                repository.addToFavouriteAt(intent.componentKey, intent.index)
             }
             is LauncherContract.Intent.RemoveFromFavourite -> viewModelScope.launch {
                 repository.removeFromFavourite(intent.componentKey)
@@ -69,4 +72,9 @@ class LauncherViewModel @Inject constructor(
     }
 
     suspend fun loadIcon(app: HomeApp): ImageBitmap? = repository.loadIcon(app)?.asImageBitmap()
+
+    private fun buildPages(apps: List<HomeApp>): List<List<HomeApp>> {
+        val maxPage = apps.maxOfOrNull { it.page } ?: return emptyList()
+        return (0..maxPage).map { page -> apps.filter { it.page == page } }
+    }
 }

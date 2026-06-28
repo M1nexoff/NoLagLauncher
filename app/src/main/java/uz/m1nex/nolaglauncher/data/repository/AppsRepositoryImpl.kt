@@ -6,6 +6,7 @@ import android.content.pm.LauncherApps
 import android.graphics.Bitmap
 import android.os.Process
 import android.os.UserHandle
+import androidx.room.withTransaction
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import uz.m1nex.nolaglauncher.data.icon.AppRef
 import uz.m1nex.nolaglauncher.data.icon.IconCache
+import uz.m1nex.nolaglauncher.data.local.LauncherDatabase
 import uz.m1nex.nolaglauncher.data.local.dao.AppDao
 import uz.m1nex.nolaglauncher.data.local.dao.IconDao
 import uz.m1nex.nolaglauncher.data.local.entity.AppEntity
@@ -33,6 +35,7 @@ import javax.inject.Singleton
 @Singleton
 class AppsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val database: LauncherDatabase,
     private val appDao: AppDao,
     private val iconDao: IconDao,
     private val iconCache: IconCache,
@@ -57,6 +60,13 @@ class AppsRepositoryImpl @Inject constructor(
     override suspend fun observeFavourite(): Flow<List<HomeApp>> =
         appDao.observeFavourite().map { rows -> rows.map { it.toHomeApp() } }
 
+    /**
+     * Reconciles the stored layout with the installed apps without disturbing the user's arrangement:
+     * existing apps keep their exact (page, position) so deliberate gaps survive, brand-new apps are
+     * appended after the last occupied slot, and uninstalled apps are deleted (leaving a gap).
+     *
+     * @author Iskandarxojayev Azamxoja
+     */
     override suspend fun syncApps() = syncMutex.withLock {
         withContext(Dispatchers.Default) {
             val perPage = settingsRepository.getGrid().perPage
@@ -74,23 +84,6 @@ class AppsRepositoryImpl @Inject constructor(
             val updateTimes = packageManager.getInstalledPackages(0)
                 .associate { it.packageName to it.lastUpdateTime }
 
-            val existing = appDao.getAll()
-            val existingKeys = existing.mapTo(HashSet()) { it.componentKey }
-
-            val favourites = existing
-                .filter { it.favourite && systemByKey.containsKey(it.componentKey) }
-                .sortedBy { it.favouritePosition }
-
-            val homeOrderedKeys = ArrayList<String>(systemByKey.size)
-            existing
-                .filter { !it.favourite && systemByKey.containsKey(it.componentKey) }
-                .sortedWith(compareBy({ it.page }, { it.position }))
-                .forEach { homeOrderedKeys.add(it.componentKey) }
-            systemByKey.keys
-                .filter { it !in existingKeys }
-                .sortedBy { labels.getValue(it).lowercase() }
-                .forEach { homeOrderedKeys.add(it) }
-
             fun entityOf(key: String, favourite: Boolean, favouritePosition: Int, page: Int, position: Int): AppEntity {
                 val component = systemByKey.getValue(key)
                 return AppEntity(
@@ -106,19 +99,36 @@ class AppsRepositoryImpl @Inject constructor(
                 )
             }
 
-            val favRows = favourites.mapIndexed { index, entity ->
-                entityOf(entity.componentKey, favourite = true, favouritePosition = index, page = 0, position = 0)
-            }
-            val homeRows = homeOrderedKeys.mapIndexed { index, key ->
-                entityOf(key, favourite = false, favouritePosition = -1, page = index / perPage, position = index % perPage)
-            }
+            // One transaction so a package-change sync cannot interleave with a drag edit and write
+            // back stale coordinates over a just-made layout change.
+            database.withTransaction {
+                val existing = appDao.getAll()
+                val existingByKey = existing.associateBy { it.componentKey }
+                val installedExisting = existing.filter { systemByKey.containsKey(it.componentKey) }
 
-            val removedKeys = (existingKeys - systemByKey.keys).toList()
+                val occupied = installedExisting
+                    .filter { !it.favourite }
+                    .mapTo(HashSet()) { it.page * perPage + it.position }
+                var nextSlot = (occupied.maxOrNull() ?: -1) + 1
 
-            appDao.upsertAll(favRows + homeRows)
-            if (removedKeys.isNotEmpty()) {
-                appDao.deleteByKeys(removedKeys)
-                iconDao.deleteByKeys(removedKeys)
+                val rows = ArrayList<AppEntity>(systemByKey.size)
+                for (entity in installedExisting) {
+                    rows.add(entityOf(entity.componentKey, entity.favourite, entity.favouritePosition, entity.page, entity.position))
+                }
+                systemByKey.keys
+                    .filter { it !in existingByKey }
+                    .sortedBy { labels.getValue(it).lowercase() }
+                    .forEach { key ->
+                        val slot = nextSlot++
+                        rows.add(entityOf(key, favourite = false, favouritePosition = -1, page = slot / perPage, position = slot % perPage))
+                    }
+
+                val removedKeys = (existingByKey.keys - systemByKey.keys).toList()
+                appDao.upsertAll(rows)
+                if (removedKeys.isNotEmpty()) {
+                    appDao.deleteByKeys(removedKeys)
+                    iconDao.deleteByKeys(removedKeys)
+                }
             }
         }
     }
@@ -134,49 +144,79 @@ class AppsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveOrder(orderedKeys: List<String>) {
+    /**
+     * Places an app on an exact home cell, leaving its old cell empty. If the target cell already
+     * holds a home app they swap; if the moving app came from the dock and the target is occupied it
+     * is dropped onto the first free slot instead so the occupant is never lost.
+     *
+     * @author Iskandarxojayev Azamxoja
+     */
+    override suspend fun moveAppToCell(componentKey: String, page: Int, position: Int) {
         val perPage = settingsRepository.getGrid().perPage
-        orderedKeys.forEachIndexed { index, key ->
-            appDao.updateLayout(key, index / perPage, index % perPage)
+        database.withTransaction {
+            val all = appDao.getAll()
+            val app = all.firstOrNull { it.componentKey == componentKey } ?: return@withTransaction
+            val wasFavourite = app.favourite
+            val occupant = all.firstOrNull {
+                !it.favourite && it.page == page && it.position == position && it.componentKey != componentKey
+            }
+            when {
+                occupant == null -> {
+                    appDao.setFavourite(componentKey, favourite = false, favouritePosition = -1)
+                    appDao.updateLayout(componentKey, page, position)
+                }
+                !wasFavourite -> {
+                    appDao.updateLayout(occupant.componentKey, app.page, app.position)
+                    appDao.updateLayout(componentKey, page, position)
+                }
+                else -> {
+                    val (freePage, freePosition) = firstFreeHomeSlot(all.filter { !it.favourite }, perPage)
+                    appDao.setFavourite(componentKey, favourite = false, favouritePosition = -1)
+                    appDao.updateLayout(componentKey, freePage, freePosition)
+                }
+            }
+            if (wasFavourite) repackFavourites()
         }
     }
 
     /**
-     * Moves an app into the favourites dock (bottom row). Returns false and does nothing when the
-     * dock is already full ([HomeGrid.MAX_FAVOURITES]). The app is appended to the end of the dock
-     * and the home pages are re-packed so the gap it left behind is closed.
+     * Inserts an app into the dock at [index], shifting the rest aside. Reordering an existing
+     * favourite is the same operation (it is removed from its old index first). The app's former home
+     * cell is intentionally left empty.
      *
      * @author Iskandarxojayev Azamxoja
      */
-    override suspend fun addToFavourite(componentKey: String): Boolean = syncMutex.withLock {
-        val count = appDao.favouriteCount()
-        if (count >= HomeGrid.MAX_FAVOURITES) return@withLock false
-        appDao.setFavourite(componentKey, favourite = true, favouritePosition = count)
-        repackHome()
-        true
-    }
+    override suspend fun addToFavouriteAt(componentKey: String, index: Int): Boolean =
+        database.withTransaction {
+            val all = appDao.getAll()
+            if (all.none { it.componentKey == componentKey }) return@withTransaction false
+            val favourites = all.filter { it.favourite }.sortedBy { it.favouritePosition }
+            val alreadyFavourite = favourites.any { it.componentKey == componentKey }
+            if (!alreadyFavourite && favourites.size >= HomeGrid.MAX_FAVOURITES) return@withTransaction false
 
-    /**
-     * Moves an app out of the favourites dock back onto the home pages, appended after the last app,
-     * then compacts both the home pages and the remaining dock positions.
-     *
-     * @author Iskandarxojayev Azamxoja
-     */
-    override suspend fun removeFromFavourite(componentKey: String) = syncMutex.withLock {
-        appDao.setFavourite(componentKey, favourite = false, favouritePosition = -1)
-        appDao.updateLayout(componentKey, page = Int.MAX_VALUE, position = Int.MAX_VALUE)
-        repackHome()
-        repackFavourites()
-    }
+            val order = favourites.mapTo(ArrayList()) { it.componentKey }
+            order.remove(componentKey)
+            order.add(index.coerceIn(0, order.size), componentKey)
+            order.forEachIndexed { position, key -> appDao.setFavourite(key, favourite = true, favouritePosition = position) }
+            true
+        }
 
-    private suspend fun repackHome() {
+    override suspend fun removeFromFavourite(componentKey: String) {
         val perPage = settingsRepository.getGrid().perPage
-        appDao.getAll()
-            .filter { !it.favourite }
-            .sortedWith(compareBy({ it.page }, { it.position }))
-            .forEachIndexed { index, entity ->
-                appDao.updateLayout(entity.componentKey, index / perPage, index % perPage)
-            }
+        database.withTransaction {
+            val homeApps = appDao.getAll().filter { !it.favourite }
+            val (freePage, freePosition) = firstFreeHomeSlot(homeApps, perPage)
+            appDao.setFavourite(componentKey, favourite = false, favouritePosition = -1)
+            appDao.updateLayout(componentKey, freePage, freePosition)
+            repackFavourites()
+        }
+    }
+
+    private fun firstFreeHomeSlot(homeApps: List<AppEntity>, perPage: Int): Pair<Int, Int> {
+        val occupied = homeApps.mapTo(HashSet()) { it.page * perPage + it.position }
+        var slot = 0
+        while (slot in occupied) slot++
+        return slot / perPage to slot % perPage
     }
 
     private suspend fun repackFavourites() {
@@ -188,13 +228,24 @@ class AppsRepositoryImpl @Inject constructor(
             }
     }
 
+    private suspend fun reflowHome(perPage: Int) {
+        appDao.getAll()
+            .filter { !it.favourite }
+            .sortedWith(compareBy({ it.page }, { it.position }))
+            .forEachIndexed { index, entity ->
+                appDao.updateLayout(entity.componentKey, index / perPage, index % perPage)
+            }
+    }
+
     private fun observeGridChanges() {
         scope.launch {
             settingsRepository.observeGrid()
                 .map { it.perPage }
                 .distinctUntilChanged()
                 .drop(1)
-                .collect { triggerSync() }
+                .collect { perPage ->
+                    syncMutex.withLock { database.withTransaction { reflowHome(perPage) } }
+                }
         }
     }
 
