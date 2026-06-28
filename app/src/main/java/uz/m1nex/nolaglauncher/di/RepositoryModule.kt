@@ -5,7 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import uz.m1nex.nolaglauncher.data.repository.AppsRepositoryImpl
+import uz.m1nex.nolaglauncher.data.repository.SettingsRepositoryImpl
 import uz.m1nex.nolaglauncher.domain.repository.AppsRepository
+import uz.m1nex.nolaglauncher.domain.repository.SettingsRepository
 import javax.inject.Singleton
 
 
@@ -16,5 +18,9 @@ interface RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsAppsRepository(repository: AppsRepositoryImpl): AppsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
 
 }

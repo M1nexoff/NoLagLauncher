@@ -11,4 +11,7 @@ interface AppsRepository {
     suspend fun loadIcon(app: HomeApp): Bitmap?
     fun launchApp(componentName: ComponentName)
     suspend fun saveOrder(orderedKeys: List<String>)
+    suspend fun observeFavourite(): Flow<List<HomeApp>>
+    suspend fun addToFavourite(componentKey: String): Boolean
+    suspend fun removeFromFavourite(componentKey: String)
 }

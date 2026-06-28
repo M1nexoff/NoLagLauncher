@@ -9,7 +9,8 @@ data class HomeApp(
     val label: String,
     val lastUpdateTime: Long,
     val page: Int,
-    val position: Int
+    val position: Int,
+    val favourite: Boolean = false
 ) {
     val componentName: ComponentName get() = ComponentName(packageName, className)
 }
